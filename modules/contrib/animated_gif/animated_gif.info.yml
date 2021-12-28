@@ -1,0 +1,10 @@
+name: 'Animated GIF'
+type: module
+description: 'Allows you to render animated GIFs without image style.'
+core_version_requirement: ^8.8 || ^9
+package: 'Media'
+
+# Information added by Drupal.org packaging script on 2021-11-03
+version: '8.x-1.7'
+project: 'animated_gif'
+datestamp: 1635949825

@@ -1,0 +1,13 @@
+global_styling:
+  version: 1.x
+  js:
+    js/bootstrap.min.js: {}
+    js/slick.min.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+  css:
+    theme:
+      css/bootstrap.min.css: {}
+      css/font-awesome.min.css: {}
+      css/slick.css: {}

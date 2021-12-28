@@ -1,0 +1,29 @@
+name: BB App Theme
+type: theme
+description: 'Custom theme for bb app'
+package: other
+libraries:
+  - bb_app/global_styling
+
+core_version_requirement: ^8 || ^9
+base theme: stable
+regions: 
+  header: Header
+  primary_menu: Primary Menu 
+  secondary_menu: Secondary Menu 
+  breadcrumb: Breadcrumb 
+  highlighted: Highlighted
+  navigation: Main navigation
+  sidebar_first: Sidebar First
+  content_before: Before Content
+  content: Content
+  content_after: After Content
+  sidebar_second: Sidebar Second
+  branding: Branding
+  search: Search
+  footer_second: Footer Second 
+  footer_first: Footer First 
+  footer: Footer
+
+
+version: '9.1.5'
