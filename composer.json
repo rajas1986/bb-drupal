@@ -27,9 +27,16 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/installers": true,
+            "drupal/core-composer-scaffold": true,
+            "drupal/core-project-message": true,
+            "drupal/core-vendor-hardening": true
+        }
     },
     "extra": {
+        "composer-exit-on-patch-failure":true,
         "drupal-scaffold": {
             "locations": {
                 "web-root": "./"
@@ -84,6 +91,14 @@
                 "  * Remove the plugin that prints this message:",
                 "      composer remove drupal/core-project-message"
             ]
+        },
+        "patches":{
+            "drupal/vote_up_down": {
+                "drupal-exclude-csrf-parameters-2670798-15":"https://www.drupal.org/files/issues/2018-04-20/drupal-exclude-csrf-parameters-2670798-15.patch"
+            }
         }
+    },
+    "require-dev": {
+        "kint-php/kint": "^4.1"
     }
 }

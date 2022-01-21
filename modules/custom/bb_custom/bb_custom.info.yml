@@ -1,0 +1,6 @@
+name: BB Custom
+description: Creation of custom blocks, view and any other custom functionality related to bb application.
+package: Custom
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9

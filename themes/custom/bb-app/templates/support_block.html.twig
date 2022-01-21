@@ -1,0 +1,13 @@
+<input id="easyautocompletesearch"/>
+{% for key,value in data.nodes %}
+  <b>{{ key }}</b>
+  <ul>
+  {% set counter = 1 %}
+  {% for k,v in value %}
+    {% if counter<=3 %}
+    <li><a href="{{ url('<front>') }}{{ v.path|slice(1) }}">{{v.title}}</a></li>
+    {% endif %}
+    {% set counter = counter + 1 %}
+  {% endfor %}
+  </ul>
+{% endfor %}

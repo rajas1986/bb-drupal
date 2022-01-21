@@ -1,0 +1,14 @@
+<?php
+use Drupal\taxonomy\Entity\Term;
+
+function bb_app_theme_suggestions_page_alter(&$suggestions, &$vars) {
+  if (\Drupal::routeMatch()
+      ->getRouteName() == 'entity.taxonomy_term.canonical' && $tid = \Drupal::routeMatch()
+      ->getRawParameter('taxonomy_term')
+  ) {
+    $term = Term::load($tid);
+	//kint($term->bundle());
+    $suggestions[] = 'page__taxonomy__' . $term->bundle();
+  }
+}
+

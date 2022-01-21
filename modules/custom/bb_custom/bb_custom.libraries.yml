@@ -1,0 +1,13 @@
+voting_assets_attachments:
+  version: 3.x
+  js:
+    js/voting.js: {}
+easysearch_assets_attachments:
+  version: 3.x
+  js:
+    js/jquery.easy-autocomplete.js: {}
+    js/custom-autocomplete.js: {}
+  css:
+    theme:
+      css/easy-autocomplete.min.css: {}
+      css/easy-autocomplete.themes.min.css: {}

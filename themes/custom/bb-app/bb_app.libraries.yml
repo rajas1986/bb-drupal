@@ -3,6 +3,7 @@ global_styling:
   js:
     js/bootstrap.min.js: {}
     js/slick.min.js: {}
+    js/custom.js: {}
   dependencies:
     - core/jquery
     - core/drupal

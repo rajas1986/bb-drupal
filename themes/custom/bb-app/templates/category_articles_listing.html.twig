@@ -1,0 +1,7 @@
+{% for key,value in data %}
+  <img src="{{ value.image }}" /><br>
+  <strong>{{ value.title }}:</strong><br>
+  <span>By author : {{ value.username }} </span><br>
+  <span>View Count : {{ value.viewcount }}</span><br>
+  <span>Vote Count : {{ value.votecount }}</span><br>
+{% endfor%}

@@ -7,6 +7,9 @@
  * All Drupal code is released under the GNU General Public License.
  * See COPYRIGHT.txt and LICENSE.txt files in the "core" directory.
  */
+error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
 
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;

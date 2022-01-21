@@ -1,0 +1,8 @@
+{% for key,value in data['nodes'] %}
+  <strong>{{ value.title }}:</strong> {{ value.short_description[0].value }} <br>
+  <img src="{{ value.image }}" /><br>
+  {% for k,val in value.tags %}
+  {{ val }}
+  {% endfor%}
+  Total Views : {{ data['nodeviews'][key] }}
+{% endfor%}

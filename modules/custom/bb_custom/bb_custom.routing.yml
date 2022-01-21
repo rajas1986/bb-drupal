@@ -1,0 +1,24 @@
+bb_custom.nodeviewcount:
+  path: 'mapi/nodeviewcount.json'
+  defaults: { _controller: '\Drupal\bb_custom\Controller\MapiController::nodeviewcount' }
+  methods:  [POST]
+  requirements:
+    _access: 'TRUE'
+bb_custom.totalvotecount:
+  path: 'mapi/totalvotecount.json'
+  defaults: { _controller: '\Drupal\bb_custom\Controller\MapiController::totalvotecount' }
+  methods:  [POST]
+  requirements:
+    _access: 'TRUE'
+bb_custom.votingupdown:
+  path: 'mapi/votingupdown.json'
+  defaults: { _controller: '\Drupal\bb_custom\Controller\MapiController::votingupdown' }
+  methods:  [POST]
+  requirements:
+    _access: 'TRUE'
+bb_custom.searchautocomplete:
+  path: 'mapi/searchautocomplete.json'
+  defaults: { _controller: '\Drupal\bb_custom\Controller\MapiController::searchautocomplete' }
+  methods:  [POST]
+  requirements:
+    _access: 'TRUE'

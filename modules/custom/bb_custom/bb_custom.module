@@ -1,0 +1,193 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function bb_custom_theme() {
+  return [
+    'library_you_may_also_like' => [
+      'variables' => [
+        'data' => [],
+      ],
+    ],
+    'library_related_articles' => [
+      'variables' => [
+        'data' => [],
+      ],
+    ],
+    'voting_up_down' => [
+      'variables' => [
+        'data' => [],
+      ],
+    ],
+    'blogs_more_from_article_category' => [
+      'variables' => [
+        'data' => [],
+      ],
+    ],
+    'blogs_more_from_article_carousel' => [
+      'variables' => [
+        'data' => [],
+      ],
+    ],
+    'category_articles_listing' => [
+      'variables' => [
+        'data' => [],
+      ],
+    ],
+    'articles_in_news' => [
+      'variables' => [
+        'data' => [],
+      ],
+    ],
+    'support_block' => [
+      'variables' => [
+        'data' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_oembed_providers_alter().
+ */
+function bb_custom_oembed_providers_alter(array &$providers) {
+  // Add YouTube bare domain to YouTube provider schemes.
+  foreach ($providers as $key => $provider) {
+    if ($provider['provider_name'] == 'YouTube') {
+      $providers[$key]['endpoints'][0]['schemes'][] = 'https://youtube.com/watch*';
+      $providers[$key]['endpoints'][0]['schemes'][] = 'https://youtube.com/v/*';
+    }
+  }
+}
+
+function bb_custom_preprocess_node(&$variables) {
+  
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName()=="entity.node.canonical"){
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if($node->bundle()=='support_pages'){
+    $currenttid = $node->get('field_support_category')->target_id;
+    $currentnid = $node->id();
+    $parenttid = $node->field_sub_page_of->target_id;
+    //kint($node);
+    //kint($parenttid);
+    $curr_page_has_subpages = "no";
+    if($node->field_has_sub_pages->value!=null){
+      $curr_page_has_subpages = "yes";
+    }
+    $is_subpage_of = "no";
+    if($node->field_sub_page_of->target_id!=null){
+      $is_subpage_of = "yes";
+    }
+    //kint($node->hasField('field_has_sub_pages'));
+    if($node->bundle()=="support_pages"){
+      //if($node->hasField('field_has_sub_pages')){
+        $query = \Drupal::entityQuery('node')
+          ->condition('type', 'support_pages')
+          //->condition('field_sub_page_of',$node->id())
+          ->condition('field_support_category',$currenttid)
+          ->sort('nid', 'ASC');
+
+        $nids = $query->execute();
+        //kint($nids);
+        $vid = 'support_category';
+        $terms =\Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
+        $aliasManager = \Drupal::service('path_alias.manager');
+        foreach ($terms as $term) {
+         $term_data[$term->tid]['tid'] = $term->tid;
+         $term_data[$term->tid]['name'] = $term->name;
+         $term_data[$term->tid]['path'] = $aliasManager->getAliasByPath('/taxonomy/term/'.$term->tid);
+        }
+        ksort($term_data);
+
+        $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);
+        $nodeDataArr = array();
+        $nodeSubPagesArr = array();
+        foreach($nodes as $node){
+          //kint($node); 
+          if($node->get('field_sub_page_of')->target_id==null){
+            $nodeDataArr[$node->get('field_support_category')->target_id][$node->id()]['title'] = $node->getTitle();
+            $nodeDataArr[$node->get('field_support_category')->target_id][$node->id()]['path'] = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'.$node->id());
+          } else {
+            /*kint($node->get('field_sub_page_of')->target_id);
+            kint($parenttid);
+            kint($currenttid);*/
+            if($is_subpage_of=="yes"){
+              if($node->get('field_sub_page_of')->target_id==$parenttid){
+                $nodeSubPagesArr[$node->get('field_support_category')->target_id][$node->id()]['title'] = $node->getTitle();
+                $nodeSubPagesArr[$node->get('field_support_category')->target_id][$node->id()]['path'] = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'.$node->id());
+              }
+            } else if($is_subpage_of=="no"){
+              if($node->get('field_sub_page_of')->target_id==$currentnid){
+                $nodeSubPagesArr[$node->get('field_support_category')->target_id][$node->id()]['title'] = $node->getTitle();
+                $nodeSubPagesArr[$node->get('field_support_category')->target_id][$node->id()]['path'] = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'.$node->id());
+              }
+            }
+          }
+        }  
+      //}
+      //kint($curr_page_has_subpages);
+      //kint($is_subpage_of);
+        //kint($nodeDataArr);
+        //kint($nodeSubPagesArr);
+      //kint($currenttid);
+      $variables['term_data'] = $term_data;
+      $variables['nodeDataArr'] = $nodeDataArr;
+      $variables['nodeSubPagesArr'] = $nodeSubPagesArr;
+      $variables['currenttid'] = $currenttid;
+      $variables['currentnid'] = $currentnid;
+      $variables['curr_page_has_subpages'] = $curr_page_has_subpages;
+      $variables['is_subpage_of'] = $is_subpage_of;
+      $variables['parentnid'] = $node->get('field_sub_page_of')->target_id;
+    }
+  }
+  }
+  
+  
+}
+
+
+function bb_custom_preprocess_page(&$variables) {
+  $route_match = \Drupal::routeMatch();
+  if($route_match->getRouteName()=="entity.taxonomy_term.canonical"){
+    $term = \Drupal::routeMatch()->getParameter('taxonomy_term');
+    $activename = $term->getName();
+    //echo "<pre/>"; kint($term->getName()); exit;
+    $activetid = $term->id();
+    if($term->bundle()=="support_category"){
+      $query = \Drupal::entityQuery('node')
+          ->condition('type', 'support_pages')
+          ->condition('field_support_category', $term->id())
+          ->sort('nid', 'ASC');
+      $nids = $query->execute();
+      //echo "<pre/>"; kint($nids); exit;
+      $vid = 'support_category';
+      $terms =\Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
+      $aliasManager = \Drupal::service('path_alias.manager');
+
+      foreach ($terms as $term) {
+       $term_data[$term->tid]['name'] = $term->name;
+       $term_data[$term->tid]['path'] = $aliasManager->getAliasByPath('/taxonomy/term/'.$term->tid);
+      }
+      ksort($term_data);
+
+      $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);
+      $nodeDataArr = array();
+      foreach($nodes as $node){
+          //kint($node); 
+          if($node->get('field_sub_page_of')->target_id==null){
+            $nodeDataArr[$node->id()]['title'] = $node->getTitle();
+            $nodeDataArr[$node->id()]['path'] = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'.$node->id());
+          } 
+      }
+      //kint($nodeDataArr);
+      $variables['activename'] = $activename;
+      $variables['activetid'] = $activetid;
+      $variables['term_data'] = $term_data;
+      $variables['nodeDataArr'] = $nodeDataArr;
+    }
+  }
+}
+
+
